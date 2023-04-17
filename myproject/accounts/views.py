@@ -8,35 +8,15 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate,login,logout
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from django.views.generic import View
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.core.mail import send_mail, send_mass_mail
+from events.models import Participants
+from .serializers import *
 # Create your views here.
-
-class Userserializer(ModelSerializer):
-    class Meta:
-        model=User
-        fields=('username','first_name','last_name','email','password')
-
-    def create(self, validated_data):
-        user = super(Userserializer, self).create(validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
-    
-class ProfileSerializer(ModelSerializer):
-    user = Userserializer(required=True)
-    class Meta:
-        model = Profile
-        fields = ('user', 'age', 'address')
-
-    def create(self, validated_data):
-        user_data = validated_data.pop('user')
-        user = Userserializer.create(Userserializer(), validated_data=user_data)
-        profile = Profile.objects.create(user=user,**validated_data)
-        return profile
 
 class CreateNewUser(CreateAPIView):
     queryset = User.objects.all()
@@ -79,25 +59,47 @@ class PassNew(views.APIView):
     
 
 
-class SendFormEmail(View):
+# class SendFormEmail(View):
 
-    def  get(self, request):
+#     def  get(self, request):
 
-        # Get the form data 
-        name = request.GET.get('name', None)
-        email = request.GET.get('email', None)
-        message = request.GET.get('message', None)
+#         # Get the form data 
+#         name = request.GET.get('name', None)
+#         email = request.GET.get('email', None)
+#         message = request.GET.get('message', None)
 
-        # Send Email
-        send_mail(
-            'Subject - Django Email Testing', 
-            'Hello ' + name + ',\n' + message, 
-            'banipreet.singh@netsolutions.com', # Admin
-            [
-                email,
-            ]
-        ) 
+#         # Send Email
+#         send_mail(
+#             'Subject - Django Email Testing', 
+#             'Hello ' + name + ',\n' + message, 
+#             'banipreet.singh@netsolutions.com', # Admin
+#             [
+#                 email,
+#             ]
+#         ) 
 
-        # Redirect to same page after form submit
-        messages.success(request, ('Email sent successfully.'))
-        return redirect('home') 
+#         # Redirect to same page after form submit
+#         messages.success(request, ('Email sent successfully.'))
+#         return redirect('home') 
+
+class Profile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = User.objects.get(id = request.user.id)
+        
+        event_data = Participants.objects.filter(user=user)
+        events = []
+        for i in event_data:
+            name=i.event_name.event_name
+            
+            print("===========================>")
+            print(name)
+            events.append(name)
+        data = {
+            "user":user.username,
+            "Email":user.email,
+            "events":events
+        }
+        return Response(data)
+    

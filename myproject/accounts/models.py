@@ -12,6 +12,8 @@ class Profile(models.Model):
     age=models.CharField()
     address=models.CharField()
 
+
+
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 

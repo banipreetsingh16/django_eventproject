@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from accounts.views import CreateNewUser,ListUser,LoginUser,LogoutUser,PassNew
-from events.views import RegisterEvent,EventSearch,EventJoin
+from accounts.views import CreateNewUser,ListUser,LoginUser,LogoutUser,PassNew,Profile
+from events.views import RegisterEvent,EventSearch,EventJoin, LeaveEvent, Report
 from rest_framework.routers import DefaultRouter
 
 
@@ -33,6 +33,10 @@ urlpatterns = [
     path('logout_user', LogoutUser.as_view()),
     path('join_event/<int:pk>', EventJoin.as_view()),
     path('new_pass', PassNew.as_view()),
+    path('leave_event/<int:pk>', LeaveEvent.as_view()),
+    path('report_event', LeaveEvent.as_view()),
+    path('profile', Profile.as_view()),
+    path('report', Report.as_view()),
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]
 

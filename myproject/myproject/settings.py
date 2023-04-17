@@ -147,9 +147,9 @@ REST_FRAMEWORK  ={
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Email
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'wwww.gmail.com'
 EMAIT_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = 'SG.oDN9basdaECvH5asdasw.gXVEgtD1asqSkn-EW'
+EMAIL_HOST_USER = 'banisingh2001@gmail.com'
+EMAIL_HOST_PASSWORD = 'engineer'
